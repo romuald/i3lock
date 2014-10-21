@@ -49,6 +49,9 @@ extern cairo_surface_t *img;
 
 /* Whether the image should be tiled. */
 extern bool tile;
+/* Whether the image should be centered. */
+extern bool center;
+
 /* The background color to use (in hex). */
 extern char color[7];
 
@@ -112,8 +115,28 @@ xcb_pixmap_t draw_image(uint32_t *resolution) {
 
     if (img) {
         if (!tile) {
-            cairo_set_source_surface(xcb_ctx, img, 0, 0);
-            cairo_paint(xcb_ctx);
+            double x = 0;
+            double y = 0;
+
+            int width = cairo_image_surface_get_width(img);
+            int height = cairo_image_surface_get_height(img);
+
+            if (center && xr_screens > 0) {
+                for (int screen = 0; screen < xr_screens; screen++) {
+                    x = xr_resolutions[screen].x + ((xr_resolutions[screen].width / 2) - (width / 2));
+                    y = xr_resolutions[screen].y + ((xr_resolutions[screen].height / 2) - (height / 2));
+
+                    cairo_set_source_surface(xcb_ctx, img, x, y);
+                    cairo_paint(xcb_ctx);
+                }
+            } else {
+                if (center) {
+                    x = resolution[0] / 2 - width / 2;
+                    y = resolution[1] / 2 - height / 2;
+                }
+                cairo_set_source_surface(xcb_ctx, img, x, y);
+                cairo_paint(xcb_ctx);
+            }
         } else {
             /* create a pattern and fill a rectangle as big as the screen */
             cairo_pattern_t *pattern;

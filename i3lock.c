@@ -75,6 +75,7 @@ static uint8_t xkb_base_error;
 
 cairo_surface_t *img = NULL;
 bool tile = false;
+bool center = false;
 bool ignore_empty_password = false;
 bool skip_repeated_empty_password = false;
 
@@ -677,6 +678,7 @@ int main(int argc, char *argv[]) {
         {"help", no_argument, NULL, 'h'},
         {"no-unlock-indicator", no_argument, NULL, 'u'},
         {"image", required_argument, NULL, 'i'},
+        {"center-image", no_argument, NULL, 'x'},
         {"tiling", no_argument, NULL, 't'},
         {"ignore-empty-password", no_argument, NULL, 'e'},
         {"inactivity-timeout", required_argument, NULL, 'I'},
@@ -687,7 +689,7 @@ int main(int argc, char *argv[]) {
     if ((username = getenv("USER")) == NULL)
         errx(EXIT_FAILURE, "USER environment variable not set, please set it.\n");
 
-    char *optstring = "hvnbdc:p:ui:teI:f";
+    char *optstring = "hvnbdc:p:ui:teI:fx";
     while ((o = getopt_long(argc, argv, optstring, longopts, &optind)) != -1) {
         switch (o) {
         case 'v':
@@ -726,6 +728,9 @@ int main(int argc, char *argv[]) {
         case 'i':
             image_path = strdup(optarg);
             break;
+        case 'x':
+            center = true;
+            break;
         case 't':
             tile = true;
             break;
@@ -750,7 +755,7 @@ int main(int argc, char *argv[]) {
             break;
         default:
             errx(EXIT_FAILURE, "Syntax: i3lock [-v] [-n] [-b] [-d] [-c color] [-u] [-p win|default]"
-            " [-i image.png] [-t] [-e] [-I] [-f]"
+            " [-i image.png] [-t] [-e] [-I] [-f] [-x]"
             );
         }
     }
