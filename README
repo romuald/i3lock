@@ -1,3 +1,12 @@
+First note: this is *not* an official repository of i3lock
+
+This fork aims at implementing a single option to i3lock while keeping
+backward compatibility.
+
+Option added: -x|--center-image: center the image (given by the
+-i option) on screen
+
+===============================
 i3lock - improved screen locker
 ===============================
 i3lock is a simple screen locker like slock. After starting it, you will
